@@ -9,3 +9,5 @@ ENV POETRY_VIRTUALENVS_CREATE=false
 RUN pip install --upgrade pip && pip install poetry && poetry install --no-root
 
 ADD . /code
+
+ENV PYTHONUNBUFFERED=1

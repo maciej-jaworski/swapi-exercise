@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="my-3">{{ filename }}</h3>
+{% include 'swapi/fragments/table.html' with header=header rows=rows %}
+{% if not all_rows_shown %}
+<a role="button" class="btn btn-outline-primary mt-3" href="{% url 'people-download-detail' pk=object.pk %}?{{ show_full_display_key }}">Load More</a>
+{% endif %}
+{% endblock %}

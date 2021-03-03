@@ -1,3 +1,10 @@
 from django.contrib import admin
+from swapi.models import PeopleDownload
 
-# Register your models here.
+
+@admin.register(PeopleDownload)
+class PeopleDownloadAdmin(admin.ModelAdmin):
+    list_display = (
+        "created_timestamp",
+        "downloaded_file",
+    )

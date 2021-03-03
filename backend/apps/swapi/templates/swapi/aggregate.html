@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="my-3">
+    <a href="{% url 'people-download-detail' pk=object.pk %}">{{ filename }}</a>
+</h3>
+<form>
+    <div class="input-group mb-3">
+        <select name="{{ columns_query_kwarg }}" class="form-select" multiple aria-label="multiple select example" size="{{ column_options|length }}">
+            {% for column in column_options %}
+            <option {% if column in selected_columns %}selected{% endif %} value="{{ column }}">{{ column }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="input-group mb-3">
+        <button type="submit" class="btn btn-outline-primary">Count</button>
+    </div>
+</form>
+{% if header and rows %}
+    {% include 'swapi/fragments/table.html' with header=header rows=rows %}
+{% endif %}
+
+{% endblock %}

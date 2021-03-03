@@ -15,7 +15,7 @@ import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(BASE_DIR, "apps/"))
-MEDIA_ROOT = "/data/uploads"
+MEDIA_ROOT = "/data/files"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -125,4 +125,4 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 
-STAR_WARS_API_HOST = os.getenv("STAR_WARS_API_HOST") or "https://swapi.dev/"
+STAR_WARS_API_HOST = os.getenv("STAR_WARS_API_HOST") or "https://swapi.dev"
