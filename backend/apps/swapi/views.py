@@ -2,6 +2,7 @@ import os
 
 import petl
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.views.generic import DetailView, ListView
 from swapi.downloader import download_new_snapshot
 from swapi.models import PeopleDownload
@@ -17,8 +18,8 @@ class PeopleDownloadListView(ListView):
 
 
 class PeopleDownloadDetailView(DetailView):
-    show_initial_count = 10
-    show_full_display_key = "full"
+    count_increment = 10
+    count_query_kwarg = "show"
 
     object: PeopleDownload
     model = PeopleDownload
@@ -27,18 +28,23 @@ class PeopleDownloadDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["filename"] = self.object.downloaded_file.name.split(os.path.sep)[-1]
-        context["show_full_display_key"] = self.show_full_display_key
+        context["count_query_kwarg"] = self.count_query_kwarg
 
         table = petl.fromcsv(self.object.downloaded_file)
         context["header"] = petl.header(table)
 
-        show_full = self.show_full_display_key in self.request.GET
-        context["all_rows_shown"] = show_full
+        try:
+            record_count_to_show = int(self.request.GET.get(self.count_query_kwarg))
+        except (TypeError, ValueError):
+            record_count_to_show = self.count_increment
 
-        if show_full:
-            context["rows"] = petl.records(table)
-        else:
-            context["rows"] = petl.records(petl.head(table, self.show_initial_count))
+        # Potentially expensive, could be cached / saved per dataset
+        if petl.nrows(table) > record_count_to_show:
+            context[
+                "load_more_url"
+            ] = f"{self.request.path}?{self.count_query_kwarg}={record_count_to_show+self.count_increment}"
+
+        context["rows"] = petl.records(petl.head(table, record_count_to_show))
 
         return context
 
