@@ -2,7 +2,6 @@ import os
 
 import petl
 from django.shortcuts import redirect
-from django.urls import reverse
 from django.views.generic import DetailView, ListView
 from swapi.downloader import download_new_snapshot
 from swapi.models import PeopleDownload
@@ -38,7 +37,7 @@ class PeopleDownloadDetailView(DetailView):
         except (TypeError, ValueError):
             record_count_to_show = self.count_increment
 
-        # Potentially expensive, could be cached / saved per dataset
+        # Potentially expensive, count could be cached / saved per dataset
         if petl.nrows(table) > record_count_to_show:
             context[
                 "load_more_url"

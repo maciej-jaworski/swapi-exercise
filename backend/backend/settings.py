@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import sys
 
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(BASE_DIR, "apps/"))
 MEDIA_ROOT = "/data/files"
@@ -21,8 +23,9 @@ MEDIA_ROOT = "/data/files"
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# TODO: change if this was ever a real app
-SECRET_KEY = "pq*w&oh&ngv2koy!&lcp=t2=94y1fb6q*j_6j3g^fy!l=qg)4c"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    raise ImproperlyConfigured("Need to provide DJANGO_SECRET_KEY env var")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
