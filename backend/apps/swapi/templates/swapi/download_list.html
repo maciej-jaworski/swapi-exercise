@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Collection{{ object_list|pluralize }}</h1>
-<ul class="list-group">
+<div class="my-3">
+    <h1>
+        Collection{{ object_list|pluralize }}
+        <form method="post" class="d-inline-block">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Fetch</button>
+        </form>
+    </h1>
+</div>
+<ul class="list-group my-3">
     {% for object in object_list %}
     <li class="list-group-item">
         <a href="{% url 'people-download-detail' pk=object.pk %}">{{ object.created_timestamp }}</a>

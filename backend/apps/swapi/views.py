@@ -1,13 +1,19 @@
 import os
 
 import petl
+from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView
+from swapi.downloader import download_new_snapshot
 from swapi.models import PeopleDownload
 
 
 class PeopleDownloadListView(ListView):
     queryset = PeopleDownload.objects.all().order_by("-created_timestamp")
     template_name = "swapi/download_list.html"
+
+    def post(self, request):
+        download_new_snapshot()
+        return redirect("people-download-list", permanent=False)
 
 
 class PeopleDownloadDetailView(DetailView):
