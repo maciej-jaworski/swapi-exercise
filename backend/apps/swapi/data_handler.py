@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Optional
 
 import petl
+import requests
 from swapi.api_client import RelatedResourceAttributeRetriever
 
 FIELDS_TO_REMOVE = [
@@ -17,7 +18,9 @@ def load_list_to_petl_table(object_list: List[dict]):
     return petl.io.json.fromdicts(object_list)
 
 
-def perform_people_table_transformations(petl_table: petl.Table) -> petl.Table:
+def perform_people_table_transformations(
+    petl_table: petl.Table, session: Optional[requests.Session] = None
+) -> petl.Table:
     # Add a date column (%Y-%m-%d) based on edited date
     new_table = petl.addfield(
         petl_table,
@@ -26,7 +29,7 @@ def perform_people_table_transformations(petl_table: petl.Table) -> petl.Table:
     )
 
     # Resolve the homeworld field into the homeworld's name (/planets/1/ -> Tatooine)
-    homeworld_name_retriever = RelatedResourceAttributeRetriever("name")
+    homeworld_name_retriever = RelatedResourceAttributeRetriever("name", session=session)
     new_table = petl.convert(new_table, "homeworld", lambda v: homeworld_name_retriever.fetch_from_url(v))
 
     # Fields referencing different resources and date fields other than date/birth_year can be dropped

@@ -3,6 +3,7 @@ import uuid
 from pathlib import Path
 
 import petl
+import requests
 from django.conf import settings
 from swapi.api_client import StarWarsAPIClient
 from swapi.data_handler import load_list_to_petl_table, perform_people_table_transformations
@@ -14,8 +15,10 @@ Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
 
 
 def download_new_snapshot():
-    results = StarWarsAPIClient.get_full_list_of("people")
-    table: petl.Table = perform_people_table_transformations(load_list_to_petl_table(results))
+    session = requests.Session()
+
+    results = StarWarsAPIClient(session=session).get_full_list_of("people")
+    table: petl.Table = perform_people_table_transformations(load_list_to_petl_table(results), session=session)
 
     file_path = os.path.join(UPLOAD_DIR, f"{str(uuid.uuid4())}.csv")
 

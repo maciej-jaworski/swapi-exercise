@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-<h3 class="my-3">{{ filename }}</h3>
+<div class="my-3">
+    <div class="row">
+        <div class="col">
+            <h3>{{ filename }}</h3>
+        </div>
+        <div class="col text-end">
+            <a role="button" class="btn btn-outline-secondary" href="{% url 'people-download-aggregate' pk=object.pk %}">Aggregate</a>
+        </div>
+    </div>
+</div>
 {% include 'swapi/fragments/table.html' with header=header rows=rows %}
 {% if load_more_url %}
 <a role="button" class="btn btn-outline-primary mt-3" href="{{ load_more_url }}">Load More</a>
