@@ -12,6 +12,8 @@ class StarWarsAPIClient:
         url_to_fetch = f"{settings.STAR_WARS_API_HOST}/api/{what}/"
         results = []
 
+        # Technically know how many pages are there here, so it's possible that generating URLs
+        # and retrieving in parallel using eg. aiohttp would be faster
         while url_to_fetch:
             response = self.session.get(url_to_fetch)
             response.raise_for_status()

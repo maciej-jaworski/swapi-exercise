@@ -15,6 +15,7 @@ Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
 
 
 def download_new_snapshot():
+    # TODO: refactor to more elegantly reuse session
     session = requests.Session()
 
     results = StarWarsAPIClient(session=session).get_full_list_of("people")

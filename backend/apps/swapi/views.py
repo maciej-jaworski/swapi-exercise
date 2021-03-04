@@ -37,7 +37,7 @@ class PeopleDownloadDetailView(DetailView):
         except (TypeError, ValueError):
             record_count_to_show = self.count_increment
 
-        # Potentially expensive, count could be cached / saved per dataset
+        # Potentially expensive, cache / save in database for dataset
         if petl.nrows(table) > record_count_to_show:
             context[
                 "load_more_url"
